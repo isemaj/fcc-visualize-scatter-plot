@@ -13,6 +13,10 @@ const svg = d3.select('#chart')
   .attr('width', width)
   .attr('height', height)
 
+const tooltip = d3.select("body")
+  .append('div')
+  .attr('id', 'tooltip')
+
 document.addEventListener("DOMContentLoaded", (event) => {
   fetch(api)
     .then(res => res.json())
@@ -72,6 +76,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
         .attr('data-xvalue', (d) => d.Year)
         .attr('data-yvalue', (d) => d.Time)
         .style('fill', (d) => colorOrdinal(d.Doping != ""))
+        .style('opacity', 0.9)
+        .on('mouseover', (d,i) => {
+          tooltip.html(d.Name + ' (' + d.Nationality + ') ' + '<br>Place: ' + d.Place + '<br>Time: ' + d.Time + ' ' + 'Year: ' + d.Year + (d.Doping ? '<br><br>' + d.Doping : "") )
+            .style('left', d3.event.clientX)
+            .style('top', d3.event.clientY)
+            .style('opacity', .9)
+        })
+        .on('mouseout', (d) => {
+          tooltip.style('opacity', 0)
+        })
+
+      svg.append('text')
+        .attr('transform', 'rotate(-90)')
+        .text('Time in Minutes')
+        .attr('y', 84)
+        .attr('x', -192)
 
     })
 });
