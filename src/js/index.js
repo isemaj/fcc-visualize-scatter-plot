@@ -21,25 +21,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
       const actualWidth = +svg.attr('width') - (padding * 2);
       const actualHeight = +svg.attr('height') - (padding * 2);
       const timeFormat = d3.timeFormat('%M:%S');
+      const parseTime = d3.timeParse('%M:%S');
       const minYears = d3.min(data, (d) => d.Year);
       const maxYears = d3.max(data, (d) => d.Year);
       // const minSeconds = d3.min(data, (d) => d.Seconds);
       // const maxSeconds = d3.max(data, (d) => d.Seconds);
-      // const minTime = d3.min(data, (d) => d.Time);
-      // const maxTime = d3.max(data, (d) => d.Time);
+      // const minTime = d3.min(data, (d) => parseTime(d.Time);
+      const minTime = d3.min(data, (d) => parseTime(d.Time));
+      const maxTime = d3.max(data, (d) => parseTime(d.Time));
       // const minTimetoSeconds = new Date().getTime(minTime);
       // const maxTimetoSeconds = new Date().getTime(maxTime);
-
+      const colorOrdinal = d3.scaleOrdinal(d3.schemeSet2); 
 
       let xScale = d3.scaleLinear()
         .domain([minYears - 1, maxYears + 1])
         .range([padding, width - padding])
 
-      // console.log(d3.extent(data, (d) => d.Seconds * 60))
-      console.log(d3.extent(data, (d) => d.Seconds))
+      // console.log(d3.extent(data, (d) => d.Seconds))
 
       let yScale = d3.scaleTime()
-        .domain(d3.extent(data, (d) => d.Seconds))
+        .domain([minTime, maxTime])
         // .domain([minSeconds, maxSeconds])
         .range([padding, height - padding])
 
@@ -66,10 +67,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
         .append('circle')
         .attr('id', 'dot')
         .attr('cx', (d) => xScale(d.Year))
-        .attr('cy', (d) => yScale(d.Seconds))
+        .attr('cy', (d) => yScale(parseTime(d.Time)))
         .attr('r', 6)
         .attr('data-xvalue', (d) => d.Year)
         .attr('data-yvalue', (d) => d.Time)
+        .style('fill', (d) => colorOrdinal(d.Doping != ""))
 
     })
 });
