@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             .style('left', d3.event.clientX)
             .style('top', d3.event.clientY)
             .style('opacity', .9)
+            .attr('data-year', d.Year)
         })
         .on('mouseout', (d) => {
           tooltip.style('opacity', 0)
@@ -89,9 +90,30 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
       svg.append('text')
         .attr('transform', 'rotate(-90)')
+        .attr('class', 'y-axis-label')
         .text('Time in Minutes')
         .attr('y', 84)
-        .attr('x', -192)
+        .attr('x', -172)
+        .style('fill', 'rgba(0, 0, 0, 0.64)')
+
+      let legend = svg.selectAll('#legend')
+        .data(colorOrdinal.domain())
+        .enter()
+        .append('g')
+        .attr('id', 'legend')
+        .attr('transform', (d,i) => `translate(100, ${actualHeight / 1.8 - i * 40})`)
+
+      legend.append('rect')
+        .attr('x', actualWidth - 20)
+        .attr('width', 20)
+        .attr('height', 20)
+        .style('fill', colorOrdinal)
+
+      legend.append('text')
+        .attr('x', actualWidth - 30)
+        .attr('y', 14)
+        .style('text-anchor', 'end')
+        .text((d) => d ? 'Riders with doping allegations' : 'No doping allegations')
 
     })
 });
