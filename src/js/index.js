@@ -25,18 +25,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
       const maxYears = d3.max(data, (d) => d.Year);
       // const minSeconds = d3.min(data, (d) => d.Seconds);
       // const maxSeconds = d3.max(data, (d) => d.Seconds);
-      const minTime = d3.min(data, (d) => d.Time);
-      const maxTime = d3.max(data, (d) => d.Time);
-      const date = new Date()
-      console.log(date.getTime(minTime));
-      console.log(date.getTime(maxTime))
+      // const minTime = d3.min(data, (d) => d.Time);
+      // const maxTime = d3.max(data, (d) => d.Time);
+      // const minTimetoSeconds = new Date().getTime(minTime);
+      // const maxTimetoSeconds = new Date().getTime(maxTime);
+
 
       let xScale = d3.scaleLinear()
         .domain([minYears - 1, maxYears + 1])
         .range([padding, width - padding])
 
       // console.log(d3.extent(data, (d) => d.Seconds * 60))
-      // console.log(d3.extent(data, (d) => d.Time))
+      console.log(d3.extent(data, (d) => d.Seconds))
 
       let yScale = d3.scaleTime()
         .domain(d3.extent(data, (d) => d.Seconds))
