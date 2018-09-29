@@ -101,19 +101,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
         .enter()
         .append('g')
         .attr('id', 'legend')
-        .attr('transform', (d,i) => `translate(100, ${actualHeight / 1.8 - i * 40})`)
+        .attr('transform', (d,i) => `translate(100, ${actualHeight / 1.5 - i * 50})`)
 
       legend.append('rect')
         .attr('x', actualWidth - 20)
         .attr('width', 20)
-        .attr('height', 20)
         .style('fill', colorOrdinal)
+        .attr('class', 'rect-label')
 
       legend.append('text')
         .attr('x', actualWidth - 30)
-        .attr('y', 14)
+        .attr('y', 16)
         .style('text-anchor', 'end')
+        .style('fill', '#3e3e3e')
         .text((d) => d ? 'Riders with doping allegations' : 'No doping allegations')
+        .attr('class', 'legend')
 
     })
 });
