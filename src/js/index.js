@@ -18,23 +18,30 @@ document.addEventListener("DOMContentLoaded", (event) => {
     .then(res => res.json())
     .then(data => {
 
-      console.log(data);
-
       const actualWidth = +svg.attr('width') - (padding * 2);
       const actualHeight = +svg.attr('height') - (padding * 2);
       const timeFormat = d3.timeFormat('%M:%S');
       const minYears = d3.min(data, (d) => d.Year);
       const maxYears = d3.max(data, (d) => d.Year);
-      const minSeconds = d3.min(data, (d) => d.Seconds);
-      const maxSeconds = d3.max(data, (d) => d.Seconds);
+      // const minSeconds = d3.min(data, (d) => d.Seconds);
+      // const maxSeconds = d3.max(data, (d) => d.Seconds);
+      const minTime = d3.min(data, (d) => d.Time);
+      const maxTime = d3.max(data, (d) => d.Time);
+      const date = new Date()
+      console.log(date.getTime(minTime));
+      console.log(date.getTime(maxTime))
 
       let xScale = d3.scaleLinear()
-        .domain([minYears, maxYears])
-        .range([0, actualWidth])
+        .domain([minYears - 1, maxYears + 1])
+        .range([padding, width - padding])
+
+      // console.log(d3.extent(data, (d) => d.Seconds * 60))
+      // console.log(d3.extent(data, (d) => d.Time))
 
       let yScale = d3.scaleTime()
-        .domain([minSeconds, maxSeconds])
-        .range([actualHeight, 0])
+        .domain(d3.extent(data, (d) => d.Seconds))
+        // .domain([minSeconds, maxSeconds])
+        .range([padding, height - padding])
 
 
       let xAxis = d3.axisBottom(xScale)
@@ -46,12 +53,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
       svg.append('g')
         .call(xAxis)
         .attr('id', 'x-axis')
-        .attr('transform', `translate(${padding}, ${height - padding})`)
+        .attr('transform', `translate(0, ${height - padding})`)
 
       svg.append('g')
         .call(yAxis)
         .attr('id', 'y-axis')
-        .attr('transform', `translate(${padding}, ${padding})`)
+        .attr('transform', `translate(${padding}, 0)`)
+
+      svg.selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('id', 'dot')
+        .attr('cx', (d) => xScale(d.Year))
+        .attr('cy', (d) => yScale(d.Seconds))
+        .attr('r', 6)
+        .attr('data-xvalue', (d) => d.Year)
+        .attr('data-yvalue', (d) => d.Time)
 
     })
 });
